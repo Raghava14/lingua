@@ -102,9 +102,17 @@ class LanguageDetector internal constructor(
         val words = if (trimmedText.contains(' ')) trimmedText.split(" ") else listOf(trimmedText)
 
         val languageDetectedByRules = detectLanguageWithRules(words)
+        val hello = languageDetectedByRules
+        println("Things start here------->")
+        println(hello)
+        // println("Completed--------------->")
         if (languageDetectedByRules != UNKNOWN) return languageDetectedByRules
 
         var languagesSequence = filterLanguagesByRules(words)
+        // for (language in languagesSequence) {
+        //     println(language)
+        // }
+        // println("Completed first time-------------->>>")
 
         val textSequence = trimmedText.lineSequence()
         val allProbabilities = mutableListOf<Map<Language, Double>>()
@@ -120,6 +128,10 @@ class LanguageDetector internal constructor(
             }
             if (i == 1) countUnigramsOfInputText(unigramCountsOfInputText, testDataModel, languagesSequence)
         }
+        for (language in languagesSequence) {
+            println(language)
+        }
+        // println("After filtering-------->")
 
         return getMostLikelyLanguage(allProbabilities, unigramCountsOfInputText, languagesSequence)
     }
@@ -172,6 +184,7 @@ class LanguageDetector internal constructor(
     ): Language {
         val summedUpProbabilities = hashMapOf<Language, Double>()
         for (language in languagesSequence) {
+            // print(language)
             summedUpProbabilities[language] = probabilities.sumByDouble { it[language] ?: 0.0 }
 
             if (unigramCountsOfInputText.containsKey(language)) {
